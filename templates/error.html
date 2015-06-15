@@ -1,0 +1,46 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block css %}
+	<style type="text/css">
+		.mylabel{
+			color: #777;
+		}
+	</style>
+{% endblock %}
+
+
+{% block loginBase %}
+	          {% if request.session.user_type %}
+	          	<li><a href = "#" style="color:#fff;" > Hello!   {{request.session.username}}</a></li>
+				<li><a href = "/logout/" style="color:#fff;" > Logout </a></li>
+	          {% else %}
+	          	<li><a href = "/login/" style="color:#fff;"> Login </a></li>
+	          	<li><a href = "/register/" style="color:#fff;"> SignUp </a></li>
+	          {% endif %}
+	          {% endblock %}
+
+
+{% block content %}
+	<div class="container">
+      <div class="row">
+        <!-- Container for login -->
+        <div class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-primary" >
+                    <div class="panel-heading">
+                        <div class="panel-title">{{message}}</div>
+                    </div>
+                    <div style="padding-top:30px" class="panel-body" >
+                        <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+                        {{otherdata | safe}}
+                        </div>
+                    </div>
+        </div>
+
+        </div><!-- Container for login ends -->
+      </div>
+    </div>
+
+{% endblock %}
+

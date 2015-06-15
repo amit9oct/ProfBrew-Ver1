@@ -1,0 +1,53 @@
+{% extends "profile/profile.html" %}
+{% block name %}{{student.get_name}}{% endblock %}
+{% block textName %}{{student.get_name}}{% endblock %}
+{% block email %}{{student.get_email}}{% endblock %}
+{% block textEmail %}{{student.get_email}}{% endblock %}
+{% block phone %}{{student.get_mobile_number}}{% endblock %}
+{% block textPhone %}{{student.get_mobile_number}}{% endblock %}
+{% block college %}{{student.get_college}}{% endblock %}
+{% block textCollege %}{{student.get_college}}{% endblock %}
+{% block details %} 
+<tr>
+	<td>Year</td>
+    <td>
+		<div id="year">
+		    {{student.get_year}}<button class="btn btn-default pull-right" onclick="hide('year')">Edit</button>
+		</div>
+		<div id="yearText" style= "display:none">
+			<form action="/caller/" method="POST">{% csrf_token %}
+		        <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+		        <div class="input-group">
+					<select name="sltYear">
+						{% for year in yearList %}
+							<option value = "{{year}}">{{year}}</option>
+						{% endfor %}
+					</select>
+		            <span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Save</button>
+					</span>
+				</div>
+		    </form>
+		</div> 
+   </td>
+</tr>
+<tr>
+	<td>Degrees Pursued</td>
+    <td>
+    	<div id="degree">
+		    {{student.get_degree_pursued}}<button class="btn btn-default pull-right" onclick="hide('degree')">Edit</button>
+		</div>
+		<div id="degreeText" style= "display:none">
+			<form action="/caller/" method="POST">{% csrf_token %}
+		        <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+		        <div class="input-group">
+					<input type="text" class="form-control" name="textDegree" value="{{ student.get_degree_pursued }}">
+		            <span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Save</button>
+					</span>
+				</div>
+		    </form>
+		</div>
+    </td>
+</tr>
+{% endblock %}

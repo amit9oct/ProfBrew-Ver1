@@ -1,0 +1,37 @@
+{% extends "profile/editProfile.html" %}
+{% block user %}{{professor.get_name}}{% endblock %}
+{% block name %}{{professor.get_name}}{% endblock %}
+{% block email %}{{professor.get_email}}{% endblock %}
+{% block phone %}{{professor.get_mobile_number}}{% endblock %}
+{% block college %}{{professor.get_college}}{% endblock %}
+{% block details %} 
+<tr>
+	<td>Areas of Interest</td>
+    <td>{{professor.get_area_of_interest}}</td>
+</tr>
+<tr>
+	<td>Courses Teaching</td>
+    <td>{% for list in coursesList %}{{list}} {% endfor %}</td>
+</tr>
+<tr>
+	<td>Best known for</td>
+    <td>{{professor.get_best_known_for}}</td>
+</tr>
+<tr>
+	<td>Qualifications</td>
+    <td>{% for list in qualificationsList %}{{list}} {% endfor %}</td>
+</tr>
+<tr>
+	<td>Positions</td>
+    <td>{% for list in positionsList %}{{list}} {% endfor %}</td>
+</tr>
+<tr>
+	<td>Rate</td>
+    <td>{{rate.get_rate}}</td>
+</tr>
+{% endblock %}
+
+{% block rateProf %}
+
+{% endblock %}
+

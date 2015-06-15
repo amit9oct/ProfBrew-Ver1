@@ -1,0 +1,135 @@
+{% extends "base/base.html" %}
+
+{% block loginBase %}
+
+	<li><a href = "#"> Hello! </a></li>
+	<li><a href = "/home/"> Logout </a></li>
+	
+
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+   
+   
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">PROFILE</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100" class="img-circle"> </div>
+                    
+                <div class=" col-md-9 col-lg-9 "> 
+                  <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>Name</td>
+                        <td>
+                        	<div id="name">
+                        	{% block name %}{% endblock %}
+                        	<button class="btn btn-default pull-right" onclick="hide('name')">Edit</button>
+                        	</div>
+                        	<div id="nameText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+								  <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      <input type="text" class="form-control" name="textName" value="{% block textName %}{%endblock%}">
+								      <span class="input-group-btn">
+								        <button type="submit" class="btn btn-default">Save</button>
+								      </span>
+								  </div>
+								</form>
+                        	</div>                       	
+                        </td> 
+                      </tr>
+                      <tr>
+                        <td>Email</td>
+                        <td>
+                        	<div id="email">
+                        	{% block email %}{% endblock %}
+                        	<button class="btn btn-default pull-right" onclick="hide('email')">Edit</button>
+                        	</div>
+                        	<div id="emailText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+								  <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      <input type="text" class="form-control" name="textEmail" value="{% block textEmail %}{%endblock%}">
+								      <span class="input-group-btn">
+								        <button class="btn btn-default" type="submit">Save</button>
+								      </span>
+								  </div>
+								</form>
+                        	</div>
+                        </td> 
+                      </tr>
+                      <tr>
+                        <td>Mobile Number</td>
+                        <td>      	
+                        	<div id="phone">
+                        	{% block phone %}{% endblock %}
+                        	<button class="btn btn-default pull-right" onclick="hide('phone')">Edit</button>
+                        	</div>
+                        	<div id="phoneText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+								  <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      <input type="text" class="form-control" name="textPhone" value="{% block textPhone %}{%endblock%}">
+								      <span class="input-group-btn">
+								        <button class="btn btn-default" type="submit">Save</button>
+								      </span>
+								  </div>
+								</form>
+                        	</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>College</td>
+                        <td>
+                        	<div id="college">
+                        	{% block college %}{% endblock %}
+                        	<button class="btn btn-default pull-right" onclick="hide('college')">Edit</button>
+                        	</div>
+                        	<div id="collegeText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+                        		<input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      <select name = "sltCollege">
+								      	{% for college in collegeList %}
+								      		<option value = "{{college}}">{{college}}</option>
+								      	{% endfor %}
+								      </select>
+								      <span class="input-group-btn">
+								        <button class="btn btn-default" type="submit">Save</button>
+								      </span>
+								  </div>
+								</form>
+                        	</div>
+                        </td>
+                      </tr>
+                      {% block details %}{% endblock %}
+                    </tbody>
+                  </table>
+                  <div class = "row">
+                  	{% block rateProf %}{% endblock %}
+                  </div>
+                </div>
+              </div>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+	<script type="text/javascript">
+		function hide(id){
+			document.getElementById(id).style.display = 'none';
+			document.getElementById(id + 'Text').style.display = 'block';
+		}
+	</script>
+{% endblock %}

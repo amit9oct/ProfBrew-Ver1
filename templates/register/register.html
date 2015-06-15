@@ -1,0 +1,214 @@
+{% extends "base/index.html" %}
+
+{% block css %}
+<style>
+.login-wrap {
+    margin-top: 2cm;
+}
+</style>
+{% endblock %}
+{% block js%}
+<!-- Script to check if the username already exists -->
+<script type="text/javascript">
+    function checkUsername(type){
+        var username = null;
+        if(type==="Student")
+            username = document.getElementById('student_username').value;
+        if(type==="Professor")
+            username = document.getElementById('professor_username').value;
+        var tempBool = true;
+        if(username==""){
+          alert("Fill Username!!");
+          return false;
+         }
+        var validUsername=null;
+        $.ajax({
+            type: "POST",
+            url: "/caller/",
+            data: {
+                username: username,
+                user_type: type,
+                mnemonics : 'USER_PRESENT',
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+                if(data!=="False"){
+                    tempBool = false;
+                    alert(data);
+                    location.reload();
+                }
+            },
+            failure: function(data) {
+                alert('Got an error dude');
+            },
+            dataType: "html"
+        });
+        return tempBool;
+    }
+    function checkPassword(type){
+        var password = null;
+        if(type==="Student")
+            password = document.getElementById('student_password').value;
+        if(!isValidPassword(password)){
+            alert("Enter a valid password!!");
+            return false;
+        }
+        else
+            return true;
+    }
+    function isValidPassword(password){
+        if(password==="")
+            return false;
+        else
+            return true;
+    }
+    function checkDegree(type){
+        var degree = null;
+        if(type==="Student")
+            degree = document.getElementById('student_degree').value;
+        if(!isValidDegree(degree)){
+            alert("Enter a valid degree!!!");
+            return false;
+        }
+        else
+            return true;
+    }
+    function isValidDegree(degree){
+        if(degree==="")
+            return false;
+        return true;
+    }
+    function checkEmail(type){
+        var email = null;
+        if(type==="Student")
+          email = document.getElementById('student_email').value;
+        if(isValidEmail(email))
+            return true;
+        else{
+            alert("Enter a valid email !!");
+            return false;
+        }
+    }
+    function isValidEmail(email){
+        if(email===""){
+            return false;
+        }
+        else
+            return true;
+    }
+    function checkName(type){
+        var name = null;
+        if(type==="Student")
+            name = document.getElementById('student_fname').value+document.getElementById('student_lname').value;
+        if(name==""){
+            alert("Fill either First Name or Last Name");
+            return false;
+        }
+        else
+            return true;
+    }
+    function checkBranchSelected(type){
+        var branchSelected = null;
+        if(type==="Student")
+            branchSelected = document.getElementById('student_branch_select');
+        var quantity = branchSelected.options[branchSelected.selectedIndex].value;
+        if(quantity === ""){
+            alert("Select a Branch!!!");
+            return false;
+        }
+        return true;
+    }
+    function checkYearSelected(type){
+        var yearSelected = null;
+        if(type==="Student")
+            yearSelected = document.getElementById('student_year_select');
+        var quantity = yearSelected.options[yearSelected.selectedIndex].value;
+        if(quantity === ""){
+          alert("Select an Year!!");
+          return false;
+        }
+        return true;
+    }
+    function checkClgSelected(type){
+        var clgSelected = null;
+        if(type==="Student")
+            clgSelected = document.getElementById('student_clg_select');
+        var quantity = clgSelected.options[clgSelected.selectedIndex].value;
+        if(quantity === ""){
+          alert("Select a College!!");
+          return false;
+        }
+        return true;
+    }
+    function checkAll(type){
+        if(!(checkUsername(type)&&
+            checkClgSelected(type)&&
+            checkName(type)&&
+            checkEmail(type)&&
+            checkPassword(type)&&
+            checkDegree(type)&&
+            checkBranchSelected(type)&&
+            checkYearSelected(type))){
+           return false;
+        }
+
+    }
+</script>
+{% endblock%}
+
+
+
+{% block content %}
+    <div class="container">
+
+      <form class="login-form"  action="/register/student/" method="POST" onsubmit="return checkAll('Student')"style = "margin-top:0px;"> {% csrf_token %}        
+        <input type="hidden" name="mnemonics" value="REGISTER_STUDENT">
+        <div class="login-wrap" >
+            <p class="login-img"><i class="icon_lock_alt"></i></p>
+            <div class="input-group">
+              <span class="input-group-addon"><i class="icon_profile"></i></span>
+              <input type="text" class="form-control" placeholder="Username"  name="username" id="student_username" onchange="checkUsername('Student')" autofocus>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+                <input type="password" class="form-control" name="password" placeholder="Password">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-user-md"></i></span>
+                <input type="text" class="form-control" placeholder="Email" name="email" id="student_email">
+            </div>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="First Name" name="fname" id="student_fname">
+                <input type="text" class="form-control" placeholder="Last Name" name="lname" id="student_lname">
+            </div>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Degree Pursued" name="degree" id="student_degree">
+            </div>
+            <select class="form-control input-lg m-bot15" name="branch" id="student_branch_select" onchange="checkBranchSelected('Student')">
+                <option selected="selected" value="">Select Your Branch</option>
+                {% for branch in branch_list %}
+                    <option value="{{branch}}">{{branch}}</option>
+                {% endfor %}
+            </select>
+            <select class="form-control input-lg m-bot15" name="year" id="student_year_select" onchange="checkYearSelected('Student')">
+                <option selected="selected" value="">Select Your Year</option>
+                {% for year in year_list %}
+                <option value="{{year}}">{{year}}</option>
+                {% endfor %}
+            </select>
+            <select class="form-control input-lg m-bot15" name="clgname" id="student_clg_select" onchange="checkClgSelected('Student')">
+                <option selected="selected" value="">Select Your College</option>
+                {% for college in college_list %}
+                <option value="{{college}}">{{college}}</option>
+                {% endfor %}
+            </select>
+            <div class="input-group">
+                <input type="text" class="form-control" name="user_type" placeholder="Student" value = "Student" disabled>
+            </div>
+            <button class="btn btn-info btn-lg btn-block" type="submit">Signup</button>
+        </div>
+      </form>
+
+    </div>  
+
+{% endblock %}

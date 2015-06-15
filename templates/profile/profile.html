@@ -1,0 +1,107 @@
+{% extends "base/base.html" %}
+
+
+
+{% block content %}
+	<div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+   
+   
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">PROFILE</h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100" class="img-circle"> </div>
+                    
+                <div class=" col-md-9 col-lg-9 "> 
+                  <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                        <td>Name</td>
+                        <td>
+                        	<div id="name">
+                        	{% block name %}{% endblock %}
+                        	</div>
+                        	<div id="nameText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+								  <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      <input type="text" class="form-control" name="textName" value="{% block textName %}{%endblock%}">
+								  </div>
+								</form>
+                        	</div>                       	
+                        </td> 
+                      </tr>
+                      <tr>
+                        <td>Email</td>
+                        <td>
+                        	<div id="email">
+                        	{% block email %}{% endblock %}
+                        	</div>
+                        	<div id="emailText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+								  <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      <input type="text" class="form-control" name="textEmail" value="{% block textEmail %}{%endblock%}">
+								    
+								  </div>
+								</form>
+                        	</div>
+                        </td> 
+                      </tr>
+                      <tr>
+                        <td>Mobile Number</td>
+                        <td>      	
+                        	<div id="phone">
+                        	{% block phone %}{% endblock %}
+                        	</div>
+                        	<div id="phoneText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+								  <input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      <input type="text" class="form-control" name="textPhone" value="{% block textPhone %}{%endblock%}">
+								     
+								  </div>
+								</form>
+                        	</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>College</td>
+                        <td>
+                        	<div id="college">
+                        	{% block college %}{% endblock %}
+                        	</div>
+                        	<div id="collegeText" style= "display:none">
+                        		<form action="/caller/" method="POST">{% csrf_token %}
+                        		<input type="hidden" name="mnemonics" value="UPDATE_PROFILE">
+								  <div class="input-group">
+								      
+								   
+								  </div>
+								</form>
+                        	</div>
+                        </td>
+                      </tr>
+                      {% block details %}{% endblock %}
+                    </tbody>
+                  </table>
+                  <div class = "row">
+                  	{% block rateProf %}{% endblock %}
+                  </div>
+                </div>
+              </div>
+            </div>            
+          </div>
+        </div>
+      </div>
+    </div>
+{% block review %}
+{% endblock %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}

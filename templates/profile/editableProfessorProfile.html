@@ -1,0 +1,312 @@
+{% extends "base/index.html" %}
+
+{% block css %}
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+    	$(document).ready(function(){
+            $('textarea').keyup(function (event) {
+                if (event.keyCode == 13) {
+                    var content = this.value;
+                    var caret = getCaret(this);
+                    if(event.shiftKey){
+                        this.value = content.substring(0, caret - 1) + "\n" + content.substring(caret, content.length);
+                        event.stopPropagation();
+                    } else {
+                        this.value = content.substring(0, caret - 1) + content.substring(caret, content.length);
+                        $('form').submit();
+                    }
+                }
+            });
+    	}
+    </script>
+	<script type="text/javascript">
+		function hide(id){
+			document.getElementById(id).style.display = 'none';
+			document.getElementById(id + 'Text').style.display = 'block';
+		}
+		function likes(factor,student_id,prof_id){
+			$.ajax({
+					type: "POST",
+					url: "/like/review/",
+					data: {
+						mnemonics : 'LIKE_PROF_REVIEW',
+						prof_id : prof_id,
+						student_id : student_id,
+						factor: factor,
+						csrfmiddlewaretoken: '{{ csrf_token }}'
+					},
+					success: function(data) {
+					document.getElementById('spnLike'+student_id).innerHTML = data
+						/*if(data!=="False"){
+							tempBool = false;
+				        	alert(data);
+				        	location.reload();
+				        }*/
+				    },
+				    failure: function(data) {
+				        alert('Got an error dude');
+				    },
+					dataType: "html"
+			});
+		}
+		function add_review(review_id){
+			var review_text = document.getElementById(review_id+'Text')
+			$.ajax({
+					type: "POST",
+					url: "/add/review/",
+					data: {
+						mnemonics : 'ADD_REVIEW',
+						prof_id : '{{professor.get_name}}',
+						review_id : review_id,
+						review_text : review_text,
+						csrfmiddlewaretoken: '{{ csrf_token }}'
+					},
+					success: function(data) {
+						/*if(data!=="False"){
+							tempBool = false;
+				        	alert(data);
+				        	location.reload();
+				        }*/
+				    },
+				    failure: function(data) {
+				        alert('Got an error dude');
+				    },
+					dataType: "html"
+			});
+		}
+	</script>
+{% endblock %}
+{% block content%}
+<section id="main-content">
+<section class="wrapper">
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header"><i class="fa fa-user-md"></i> Profile</h3>
+        <ol class="breadcrumb">
+            <li><i class="fa fa-home"></i><a href="index.html">Home</a></li>
+            <li><i class="icon_documents_alt"></i>Profs</li>
+            <li><i class="fa fa-user-md"></i>{{professor.get_name}}</li>
+        </ol>
+    </div>
+</div>
+  <div class="row">
+    <!-- profile-widget -->
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+              <div class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                  <h4>{{professor.get_name}}</h4>               
+                  <div class="follow-ava">
+                      <img src="img/profile-widget-avatar.jpg" alt="">
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <br>
+                    <p>Rate - {{rate.get_rate}}</p>
+                    <p>{{professor.get_branch}}</p>
+                    <p>{{professor.get_college}}</p>
+                </div>
+                <div class="col-lg-6 col-sm-6 follow-info weather-category">
+                          <ul>
+                              <li class="active">
+                                  <i class="fa fa-comments fa-2x"> </i><br>
+                                  They inspire you, they entertain you, and you end up learning a ton even when you don't know it
+                              </li>
+                               
+                          </ul>
+                </div>
+              </div>
+        </div>
+    </div>
+  </div>
+  <!-- page start-->
+  <div class="row">
+     <div class="col-lg-12">
+        <section class="panel">
+              <header class="panel-heading tab-bg-info">
+                  <ul class="nav nav-tabs">
+                      <li class="active">
+                          <a data-toggle="tab" href="#recent-activity">
+                              <i class="icon-home"></i>
+                              Feedback
+                          </a>
+                      </li>
+                      <li>
+                          <a data-toggle="tab" href="#profile">
+                              <i class="icon-user"></i>
+                              Profile
+                          </a>
+                      </li>
+                      <!--- TO be made later
+                      <li class="">
+                          <a data-toggle="tab" href="#edit-profile">
+                              <i class="icon-envelope"></i>
+                              Edit Profile
+                          </a>
+                      </li>
+                      -->
+                  </ul>
+              </header>
+              <div class="panel-body">
+                  <div class="tab-content">
+                      <div id="recent-activity" class="tab-pane active">
+                          {% for review in review_list %}
+                          <div class="profile-activity">                                          
+                              <div class="act-time">                                      
+                                  <div class="activity-body act-in">
+                                      <span class="arrow"></span>
+                                      <div class="text">
+                                          <h4><!-- Yo can href this later to user profile-->
+                                            <font style = "color:#B64C4C;font-size:20px">{{review.get_student.get_username}}</font>  at {{review.get_timestamp}} 
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <div class="btn-group">
+                                            <button class="btn btn-default " type="submit" onclick="likes(1,'{{review.get_student.get_username}}','{{review.get_professor.get_username}}')"><i class="fa fa-thumbs-o-up"></i></button>
+                                            <button class="btn btn-default" type="submit" onclick="likes(-1,'{{review.get_student.get_username}}','{{review.get_professor.get_username}}')"><i class="fa fa-thumbs-o-down"></i></button>
+                                            </div>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            {{review.get_number_of_likes}} likes this
+                                          </h4>
+                                          <p>{{review.get_review}}</p>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          {% endfor %}
+                          <form action="/add/review/" method="POST">{% csrf_token %}
+                              <input type="hidden" name="mnemonics" value="ADD_FRESH_REVIEW" >
+                              <input type="hidden" name="review_type" value="Fresh Review">
+                              <input type="hidden" name="prof_id" value="{{professor.get_username}}">
+                          <!--	<input type="text"  name="review_text" placeholder = "Add a review" >-->
+                              <textarea class="form-control" rows="5" name="review_text" placeholder = "Add a review"></textarea>
+                              <input class="btn btn-default" type="submit" value="Add a review" >
+                          </form>
+                      </div>
+                      <!-- profile -->
+                      <div id="profile" class="tab-pane">
+                        <section class="panel">
+                          <div class="panel-body bio-graph-info">
+                              <h1>Bio Graph</h1>
+                              <div class="row">
+                                  <div class="bio-row">
+                                      <p><span>Name </span>: {{professor.get_name}} </p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Known as </span>: {{professor.get_popular_name}}</p>
+                                  </div>                                              
+                                  <div class="bio-row">
+                                      <p><span>Branch</span>: {{professor.get_branch}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>College </span>: {{professor.get_college}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Areas of Interest </span>: {{professor.get_area_of_interest}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Email </span>:{{professor.get_email}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Best known for </span>: {{professor.get_best_known_for}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Courses taught </span>: {% for list in coursesList %}{{list}} {% endfor %}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Phone </span>:  {{professor.get_mobile_number}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Qualifications </span>:  {% for list in qualificationsList %}{{list}} {% endfor %}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Rate </span>:  {{rate.get_rate}}</p>
+                                  </div>
+                              </div>
+                          </div>
+                        </section>
+                          <section>
+                              <div class="row">                                              
+                              </div>
+                          </section>
+                      </div>
+                      <!-- edit-profile -->
+                      <div id="edit-profile" class="tab-pane">
+                        <section class="panel">                                          
+                              <div class="panel-body bio-graph-info">
+                                  <h1> Profile Info</h1>
+                                  <form class="form-horizontal" role="form">                                                  
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">First Name</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="f-name" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Last Name</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="l-name" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">About Me</label>
+                                          <div class="col-lg-10">
+                                              <textarea name="" id="" class="form-control" cols="30" rows="5"></textarea>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Country</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="c-name" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Birthday</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="b-day" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Occupation</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="occupation" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Email</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="email" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Mobile</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="mobile" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Website URL</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="url" placeholder="http://www.demowebsite.com ">
+                                          </div>
+                                      </div>
+
+                                      <div class="form-group">
+                                          <div class="col-lg-offset-2 col-lg-10">
+                                              <button type="submit" class="btn btn-primary">Save</button>
+                                              <button type="button" class="btn btn-danger">Cancel</button>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </div>
+                          </section>
+                      </div>
+                  </div>
+              </div>
+          </section>
+     </div>
+  </div>
+
+  <!-- page end-->
+</section>
+</section>
+{% endblock%}

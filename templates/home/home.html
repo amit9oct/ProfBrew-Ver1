@@ -1,0 +1,194 @@
+{% extends "base/index.html" %}
+{% block title %} ProfBrew {% endblock %}
+{% block css %}
+{% endblock %}
+{% block js %}
+{% endblock %}
+
+
+{% block content %}
+{% load staticfiles %}
+<section id="main-content">
+    <section class="wrapper">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="info-box blue-bg">
+                    <i class="icon_profile"></i>
+                    <a href = "#"><div class="count" style = "color : #fff;">Check Profs of BITS Pilani</div></a>						
+                </div><!--/.info-box-->			
+            </div><!--/.col-->
+            
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <div class="info-box green-bg">
+                    <i class="icon_book_alt"></i>
+                    <a href = "#"><div class="count" style = "color : #fff;">Give your feedback</div></a>						
+                </div><!--/.info-box-->			
+            </div><!--/.col-->	
+            
+        </div><!--/.row-->
+    
+        <div class="row">
+            <div class="col-lg-12">
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-home"></i><a href="/home/">Home</a></li>					  	
+                </ol>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 portlets">
+                <div class="col-md-12 portlets">
+                  <!-- Widget -->
+                  <a href = "#">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <div class="pull-left">Most liked Prof</div>
+                      <div class="clearfix"></div>
+                    </div>
+					
+                    <div class="panel-body">
+                    {%block MostRatedProfessor %} 
+					 <div class="col-lg-5 col-sm-4">
+                        <div class="avatar pull-left">
+                            <img src={% static "base/img/teacher.jpg" %} alt=""/>
+                        </div>
+                        <h4 class="avatar pull-right">{{top_prof.get_name}}</h4> 
+                      </div>
+					  
+                        
+						<div class="col-lg-7 col-sm-7 follow-info" style = "color:#797979;">
+                            <p>{{top_prof_rate.get_rate}}</p>
+                            <p>{{top_prof.get_branch}}</p>
+                            <p>{{top_prof.get_college.get_college_name}}</p>
+                            
+                        </div>
+					{% endblock %}
+                    </div>
+
+
+                  </div> 
+                  </a>
+                </div>
+                <div class="col-md-12 portlets">
+              <!-- Widget -->
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <div class="pull-left">Most Liked Feedback</div>
+                       
+                      <div class="clearfix"></div>
+                    </div>
+
+                    <div class="panel-body">
+                      <!-- Widget content -->
+                      <div class="padd sscroll">
+                        
+                        <ul class="chats">
+						{% block TopCommnets %}
+                          <!-- Chat by us. Use the class "by-me". -->
+                          <a href = "#">
+                          <li class="by-me">
+                            <!-- Use the class "pull-left" in avatar -->
+                            <div class="avatar pull-left">
+                              
+                              <img src={% static "base/img/student.jpg" %} alt=""/>
+                            </div>
+
+                            <div class="chat-content">
+                              <!-- In meta area, first include "name" and then "time" -->
+                              <div class="chat-meta">
+							  {% block TopCommnetorName %}{{top_review.get_student.get_username}} on {% endblock %}
+							  <font>{%block TopCommentedProf%}{{top_review.get_professor.get_username}}{% endblock %}</font> 
+							  <span class="pull-right">
+							  {% block CommentTime %}{{top_review.get_timestamp}}{% endblock %}
+							  </span></div>
+                              {% block CommnetContent %}{{top_review.get_review}}{% endblock %}
+                              <div class="clearfix"></div>
+                            </div>
+                          </li>
+                          </a>
+
+                          <!-- Chat by other. Use the class "by-other". -->
+                          <a href = "#">
+                          <li class="by-me">
+                            <!-- Use the class "pull-left" in avatar -->
+                            <div class="avatar pull-left">
+                              <img src={% static "base/img/student.jpg" %} alt=""/>
+                            </div>
+
+                            <div class="chat-content">
+                              <!-- In meta area, first include "name" and then "time" -->
+							  <div class="chat-meta">
+							  {{top_review.get_student.get_username}} on 
+							  <font>{{top_review.get_professor.get_username}}</font> 
+							  <span class="pull-right">
+							  {{top_review.get_timestamp}}
+							  </span></div>
+                              {{top_review.get_review}}
+
+                              <div class="clearfix"></div>
+                            </div>
+                          </li>
+                          </a>
+						{% endblock %}
+                        </ul>
+
+                      </div>
+                      <!-- Widget footer -->
+                      
+                    </div>
+
+
+                  </div> 
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                      <!--Project Activity start-->
+                      <section class="panel">
+                          <div class="panel-body progress-panel">
+                            <div class="row">
+                              <div class="col-lg-8 task-progress pull-left">
+                                  <h1>OUR MOTTO</h1>                                  
+                              </div>
+                              
+                            </div>
+                          </div>
+                          <table class="table table-striped">
+                              <tbody>
+                              <tr>
+                                  <td><font style = "color:#167AD4;font-size:20px;">What’s all this fuss about?</font>
+                                  <br>
+                                  <p style = "font-size:16px;">
+								  We are a Zomato of colleges.
+We know that Mr. Navneet Goyal is the go-to person for all DBMS queries and Mr. Rajeev Kumar for Graphs and Networks.
+We know this about all the professors and all the colleges, and we do this based on your feedback.
+                                  </p>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td><font style = "color:#167AD4;font-size:20px;">How can you help us?</font>
+                                  <br>
+                                  <p style = "font-size:16px;">Remember when you had to go from senior to senior to ask which Prof to choose for a certain elective? Well, Generation-Next can just Profbrew it. And they are just your feedback away!
+                                  </p>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td><font style = "color:#167AD4;font-size:20px;">What to do if something seems out of place on our website?</font>
+                                  <br>
+                                  <p style = "font-size:16px;">The term ‘Teacher’ has resonated with God in most literature, and we, at Profbrew, are indebted to them for bearing with us all throughout and making us who we are. A big part of our mission is to deliver to them, the respect that they deserve. Therefore, we urge everyone to honor the sanctity of the profession and only write what’s constructive and helpful. 
+
+                                  <br>
+                                  And if you find that there’s something hurtful anywhere on our website, email us at mailprofbrew@gmail.com and we’ll take care of it. Or, just catch us at ANC. Treat’s on us!
+                                  </p>
+                                  </td>
+                              </tr>
+                              
+                              </tbody>
+                          </table>
+                      </section>
+                      <!--Project Activity end-->
+                  </div>
+            </div><br><br>
+        
+    </section>
+</section>
+{% endblock %}

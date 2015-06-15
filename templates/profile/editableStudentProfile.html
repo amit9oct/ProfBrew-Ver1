@@ -1,0 +1,255 @@
+{% extends "base/index.html" %}
+
+{% block css %}
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+    	$(document).ready(function(){
+            $('textarea').keyup(function (event) {
+                if (event.keyCode == 13) {
+                    var content = this.value;
+                    var caret = getCaret(this);
+                    if(event.shiftKey){
+                        this.value = content.substring(0, caret - 1) + "\n" + content.substring(caret, content.length);
+                        event.stopPropagation();
+                    } else {
+                        this.value = content.substring(0, caret - 1) + content.substring(caret, content.length);
+                        $('form').submit();
+                    }
+                }
+            });
+    	}
+    </script>
+	<script type="text/javascript">
+		function hide(id){
+			document.getElementById(id).style.display = 'none';
+			document.getElementById(id + 'Text').style.display = 'block';
+		}
+		function likes(factor,student_id,prof_id){
+			$.ajax({
+					type: "POST",
+					url: "/like/review/",
+					data: {
+						mnemonics : 'LIKE_PROF_REVIEW',
+						prof_id : prof_id,
+						student_id : student_id,
+						factor: factor,
+						csrfmiddlewaretoken: '{{ csrf_token }}'
+					},
+					success: function(data) {
+					document.getElementById('spnLike'+student_id).innerHTML = data
+						/*if(data!=="False"){
+							tempBool = false;
+				        	alert(data);
+				        	location.reload();
+				        }*/
+				    },
+				    failure: function(data) {
+				        alert('Got an error dude');
+				    },
+					dataType: "html"
+			});
+		}
+		function add_review(review_id){
+			var review_text = document.getElementById(review_id+'Text')
+			$.ajax({
+					type: "POST",
+					url: "/add/review/",
+					data: {
+						mnemonics : 'ADD_REVIEW',
+						prof_id : '{{student.get_name}}',
+						review_id : review_id,
+						review_text : review_text,
+						csrfmiddlewaretoken: '{{ csrf_token }}'
+					},
+					success: function(data) {
+						/*if(data!=="False"){
+							tempBool = false;
+				        	alert(data);
+				        	location.reload();
+				        }*/
+				    },
+				    failure: function(data) {
+				        alert('Got an error dude');
+				    },
+					dataType: "html"
+			});
+		}
+	</script>
+{% endblock %}
+{% block content%}
+<section id="main-content">
+<section class="wrapper">
+<div class="row">
+    <div class="col-lg-12">
+        <h3 class="page-header"><i class="fa fa-user-md"></i> Profile</h3>
+        <ol class="breadcrumb">
+            <li><i class="fa fa-home"></i><a href="index.html">Home</a></li>
+            <li><i class="icon_documents_alt"></i>Pages</li>
+            <li><i class="fa fa-user-md"></i>{{student.get_name}}</li>
+        </ol>
+    </div>
+</div>
+  <div class="row">
+    <!-- profile-widget -->
+    <div class="col-lg-12">
+        <div class="profile-widget profile-widget-info">
+              <div class="panel-body">
+                <div class="col-lg-2 col-sm-2">
+                  <h4>{{student.get_name}}</h4>               
+                  <div class="follow-ava">
+                      <img src="img/profile-widget-avatar.jpg" alt="">
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 follow-info">
+                    <br>
+                    <p>{{student.get_branch}}</p>
+                    <p>{{student.get_college}}</p>
+                </div>
+                <div class="col-lg-6 col-sm-6 follow-info weather-category">
+                          <ul>
+                              <li class="active">
+                                  <i class="fa fa-comments fa-2x"> </i><br>
+                                  They inspire you, they entertain you, and you end up learning a ton even when you don't know it
+                              </li>
+                               
+                          </ul>
+                </div>
+              </div>
+        </div>
+    </div>
+  </div>
+  <!-- page start-->
+  <div class="row">
+     <div class="col-lg-12">
+        <section class="panel">
+              <header class="panel-heading tab-bg-info">
+                  <ul class="nav nav-tabs">
+                      <li class = "active">
+                          <a data-toggle="tab" href="#profile">
+                              <i class="icon-user"></i>
+                              Profile
+                          </a>
+                      </li>
+                      
+                      <li class="">
+                          <a data-toggle="tab" href="#edit-profile">
+                              <i class="icon-envelope"></i>
+                              Edit Profile
+                          </a>
+                      </li>
+                      
+                  </ul>
+              </header>
+              <div class="panel-body">
+                  <div class="tab-content">
+                      <!-- profile -->
+                      <div id="profile" class="tab-pane active">
+                        <section class="panel">
+                          <div class="panel-body bio-graph-info">
+                              <h1>Bio Graph</h1>
+                              <div class="row">
+                                  <div class="bio-row">
+                                      <p><span>Name </span>: {{student.get_name}} </p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Year of study </span>: {{student.get_year}}</p>
+                                  </div>                                              
+                                  <div class="bio-row">
+                                      <p><span>Branch</span>: {{student.get_branch}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>College </span>: {{student.get_college}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Degree Pursued </span>: {{student.get_degree_pursued}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Email </span>:{{student.get_email}}</p>
+                                  </div>
+                                  <div class="bio-row">
+                                      <p><span>Phone </span>:  {{student.get_mobile_number}}</p>
+                                  </div>
+                              </div>
+                          </div>
+                        </section>
+                          <section>
+                              <div class="row">                                              
+                              </div>
+                          </section>
+                      </div>
+                      <!-- edit-profile -->
+                      <div id="edit-profile" class="tab-pane ">
+                        <section class="panel">                                          
+                              <div class="panel-body bio-graph-info">
+                                  <h1> Profile Info</h1>
+                                  <form class="form-horizontal" role="form">                                                  
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Name</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="f-name" value="{{student.get_name}}">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Email</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="l-name" value="{{student.get_email}}">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Phone</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="c-name" value="{{student.get_mobile_number}}">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Birthday</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="b-day" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Occupation</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="occupation" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Email</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="email" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Mobile</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="mobile" placeholder=" ">
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label class="col-lg-2 control-label">Website URL</label>
+                                          <div class="col-lg-6">
+                                              <input type="text" class="form-control" id="url" placeholder="http://www.demowebsite.com ">
+                                          </div>
+                                      </div>
+
+                                      <div class="form-group">
+                                          <div class="col-lg-offset-2 col-lg-10">
+                                              <button type="submit" class="btn btn-primary">Save</button>
+                                              <button type="button" class="btn btn-danger">Cancel</button>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </div>
+                          </section>
+                      </div>
+                  </div>
+              </div>
+          </section>
+     </div>
+  </div>
+
+  <!-- page end-->
+</section>
+</section>
+{% endblock%}
