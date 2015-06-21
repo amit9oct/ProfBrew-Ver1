@@ -1,7 +1,7 @@
 '''
 Created on Jan 10, 2015
 
-@author: Amitayush Thakur,Sagar Grover and Abhimanyu Siwach
+@author: Amitayush Thakur
 '''
 from Users.views.login.login import login
 from Users.views.login.login import verify_credentials
@@ -99,10 +99,14 @@ def caller(request):
     if mnemonics == 'LIKE_PROF_REVIEW':
         student_id = request.POST['student_id']
         prof_id = request.POST['prof_id']
+        date_time = request.POST['time_stamp']
         student = Student.objects.filter(_username=student_id)
         prof = Professor.objects.filter(_username=prof_id)
         review_list = ProfessorReviews.objects.filter(_student=student[0],_professor=prof[0])
         review = review_list[0]
+        for rev in review_list:
+            if rev.get_timestamp() == date_time:
+                review = rev
         factor = request.POST['factor']
         return like_prof_review(request,review,factor)
     return HttpResponse(str(call_type)+' '+str(mnemonics))

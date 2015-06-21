@@ -7,8 +7,7 @@ from Users.views.profile.profile import profile
 import Users.views
 
 def login(request):
-    if not 'last_url' in request.session:
-        request.session['last_url'] = '/home/'
+    request.session['last_url'] = '/login/'
     if not 'call_type' in request.session:
         request.session['call_type'] = EXTERNAL
     return render(request,'login/login.html')
@@ -54,7 +53,7 @@ def load_editable_profile(request):
         else:
             temp_user = Professor.objects.filter(_username=username,_password=password)
         if len(temp_user) == 0:
-            request.session['mnemonics'] = mnemonics[last_url]
+            #request.session['mnemonics'] = mnemonics[last_url]
             request.session['call_type'] = INTERNAL
             return redirect(last_url)
         elif len(temp_user) == 1:

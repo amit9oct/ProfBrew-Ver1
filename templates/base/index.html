@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
 
-    <title>{% block title %}Creative - Bootstrap Admin Template{% endblock %}</title>
+    <title>{% block title %}ProfBrew{% endblock %}</title>
 
     <!-- Bootstrap CSS -->    
     {% load staticfiles %}
@@ -76,19 +76,23 @@
                 <ul class="nav pull-right top-menu">
                     
                     <!-- user login dropdown start-->
-                    <li class="dropdown">
+                    <li class="dropdown" >
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <span class="username">{{request.session.username}}</span>
+                            <span class="username">Hi {% firstof request.session.username "Visitor"%}</span>
                             <b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" >
                             <div class="log-arrow-up"></div>
+                            {% if request.session.username %}
                             <li class="eborder-top">
                                 <a href="#"><i class="icon_profile"></i> My Profile</a>
+                                <a href="/logout/"><i class="icon_profile"></i>Logout</a>
                             </li>
+                            {% else %}
                             <li>
-                                <a href="/logout/"><i class="icon_key_alt"></i> Log Out</a>
+                                <a href="/login/"><i class="icon_profile"></i> Login or Signup!</a>
                             </li>
+                            {% endif %}
                         </ul>
                     </li>
                     <!-- user login dropdown end -->
@@ -125,10 +129,19 @@
                       </ul>
                   </li>
                   <li >
-                      <a class="" href="#" style = "color:#000;">
+                      {% if request.session.uuser_type == 'Student'  %}
+                      <!-- <a class="" href="#" style = "color:#000;"> -->
                           <i class="icon_profile"></i>
                           <span>My Profile</span>
+                          <a href="/logout/"><span>Logout</span></a>
+                      <!--</a>-->
+                      {% else %}
+                      <a class="" href="/login/" style = "color:#000;">
+                          <i class="icon_profile"></i>
+                          <span>Login or Sign up!</span>
+                          
                       </a>
+                      {% endif %}
                   </li>
               </ul>
               <!-- sidebar menu end-->
@@ -200,22 +213,7 @@
       });
 	  
 	  /* ---------- Map ---------- */
-	$(function(){
-	  $('#map').vectorMap({
-	    map: 'world_mill_en',
-	    series: {
-	      regions: [{
-	        values: gdpData,
-	        scale: ['#000', '#000'],
-	        normalizeFunction: 'polynomial'
-	      }]
-	    },
-		backgroundColor: '#eef3f7',
-	    onLabelShow: function(e, el, code){
-	      el.html(el.html()+' (GDP - '+gdpData[code]+')');
-	    }
-	  });
-	});
+	
 
 
 
