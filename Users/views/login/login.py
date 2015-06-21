@@ -64,4 +64,11 @@ def load_editable_profile(request):
             request.session['call_type'] = INTERNAL
             return profile(request,request.session['user_type'])
 
-
+@csrf_exempt
+def load_editable_profile_after_session(request):
+    username = request.session.get('username',None)
+    temp_user = request.session.get('user_type',None)
+    if temp_user == None or username == None:
+        return HttpResponseBadRequest
+    else:
+        return profile(request,request.session['user_type'])

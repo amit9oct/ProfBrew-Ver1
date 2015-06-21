@@ -12,8 +12,8 @@ def home(request):
     if temp != 'Student' and temp != 'Professor':
         request.session['user_type'] = 'Visitor'
     top_prof_rate = get_top_prof_rate()
-    top_review = get_most_liked_review()
-    context = {'top_prof':top_prof_rate.get_prof, 'top_prof_rate':top_prof_rate, 'top_review':top_review}
+    top_review_list = get_most_liked_review()
+    context = {'top_prof':top_prof_rate.get_prof, 'top_prof_rate':top_prof_rate, 'top_review_list':top_review_list}
     return render(request,"home/home.html",context)
 
 def search(request):

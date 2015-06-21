@@ -21,6 +21,7 @@ urlpatterns += patterns('Users.views.home.home',
 urlpatterns += patterns('Users.views.login.login',
     url(r'^login/$','login'),
     url(r'^myprofile/$','load_editable_profile'),
+    url(r'^myaccount/$','load_editable_profile_after_session'),
 )
 urlpatterns += patterns('Users.views.caller',
     url(r'^register/student/$','caller'),

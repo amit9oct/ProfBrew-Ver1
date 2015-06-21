@@ -83,29 +83,7 @@
                         
                         <ul class="chats">
 						{% block TopCommnets %}
-                          <!-- Chat by us. Use the class "by-me". -->
-                          <a href = "#">
-                          <li class="by-me">
-                            <!-- Use the class "pull-left" in avatar -->
-                            <div class="avatar pull-left">
-                              
-                              <img src={% static "base/img/student.jpg" %} alt=""/>
-                            </div>
-
-                            <div class="chat-content">
-                              <!-- In meta area, first include "name" and then "time" -->
-                              <div class="chat-meta">
-							  {% block TopCommnetorName %}{{top_review.get_student.get_username}} on {% endblock %}
-							  <font>{%block TopCommentedProf%}{{top_review.get_professor.get_username}}{% endblock %}</font> 
-							  <span class="pull-right">
-							  {% block CommentTime %}{{top_review.get_timestamp}}{% endblock %}
-							  </span></div>
-                              {% block CommnetContent %}{{top_review.get_review}}{% endblock %}
-                              <div class="clearfix"></div>
-                            </div>
-                          </li>
-                          </a>
-
+						  {% for top_review in top_review_list %}
                           <!-- Chat by other. Use the class "by-other". -->
                           <a href = "#">
                           <li class="by-me">
@@ -128,6 +106,7 @@
                             </div>
                           </li>
                           </a>
+						  {% endfor %}
 						{% endblock %}
                         </ul>
 
