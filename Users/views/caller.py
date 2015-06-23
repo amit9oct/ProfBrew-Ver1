@@ -84,12 +84,25 @@ def caller(request):
         opcode = array[1]
         return rate_prof(request,prof_id,opcode)  #to be changed later
     if mnemonics == 'ADD_FRESH_REVIEW':
+        user_type = request.session.get('user_type',None)
+        if user_type != 'Student':
+            request.session['call_type'] = INTERNAL
+            msg = 'Visitor cannot add review!!!'
+            title = 'Cannot Add review!!!'
+            otherdata = "<a href='/login/'>Login or signup to add a review. Click here to go login or signup!!</a>"
+            context = { 'message':msg , 'otherdata':otherdata,'title':title}
+            return render(request,'error.html',context)
         student_id = request.session['username']
         prof_id = request.POST['prof_id']
         review_type = request.POST['review_type']
         review_text = request.POST['review_text']
         return add_prof_review(request,prof_id,student_id,None,REVIEW_TYPE[mnemonics],review_text)
     if mnemonics == 'ADD_REVIEW':
+        if not 'username' in request.session:
+            request.session['call_type'] = INTERNAL
+            otherdata = "<a href='/login/'>Login or signup to add a review. Click here to go login or signup!!</a>"
+            context = { 'message':msg , 'otherdata':otherdata,'title':title}
+            return render(request,'error.html',context)
         student_id = request.session['username']
         prof_id = request.POST['prof_id']
         review_type = REVIEW_TYPE[request.POST['review_type']]

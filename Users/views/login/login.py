@@ -7,7 +7,8 @@ from Users.views.profile.profile import profile
 import Users.views
 
 def login(request):
-    request.session['last_url'] = '/login/'
+    if not 'last_url' in request.session:
+        request.session['last_url'] = '/login/'
     if not 'call_type' in request.session:
         request.session['call_type'] = EXTERNAL
     return render(request,'login/login.html')
@@ -55,14 +56,21 @@ def load_editable_profile(request):
         if len(temp_user) == 0:
             #request.session['mnemonics'] = mnemonics[last_url]
             request.session['call_type'] = INTERNAL
-            return redirect(last_url)
+            msg = 'Invalid User!!!'
+            title = 'Invalid Username or password'
+            otherdata = "<a href='/login/'>Invalid username or password. Click here to login!!</a>"
+            context = { 'message':msg , 'otherdata':otherdata,'title':title}
+            return render(request,'error.html',context)
         elif len(temp_user) == 1:
             user = temp_user[0]
             request.session['username'] = user.get_username()
             request.session['user_type'] = user.get_user_type()
             request.session['mnemonics'] = 'PROFILE_VIEW' 
             request.session['call_type'] = INTERNAL
-            return profile(request,request.session['user_type'])
+            if request.session['last_url'] == '/login/':
+                return profile(request,request.session['user_type'])
+            else:
+                return redirect(request.session['last_url'])
 
 @csrf_exempt
 def load_editable_profile_after_session(request):

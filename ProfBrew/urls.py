@@ -26,7 +26,6 @@ urlpatterns += patterns('Users.views.login.login',
 urlpatterns += patterns('Users.views.caller',
     url(r'^register/student/$','caller'),
     url(r'^caller/$','caller'),
-    url(r'^add/review/$','caller'),
     url(r'^like/review/$','caller'),
 )
 urlpatterns += patterns('Users.views.register.register',
@@ -36,7 +35,11 @@ urlpatterns += patterns('Users.views.register.filldb',
     url(r'^filldb/$','insertIntoDatabase'),
 )
 urlpatterns += patterns('Reviews.views.add_reviews',
-    url(r'^fresh/review/$','prof_review')
+    url(r'^fresh/review/$','prof_review'),
+    url(r'^add/review/$','add_fresh_review'),
+)
+urlpatterns += patterns('Reviews.views.likes',
+    url(r'^likes/review/$','likes')
 )
 urlpatterns += patterns('SearchEngine.views.search',
     url(r'^search/$', 'search'),

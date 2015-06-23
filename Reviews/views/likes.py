@@ -3,8 +3,8 @@ Created on Jan 30, 2015
 
 @author: Amitayush Thakur
 '''
-from Users.models import Student
-from Reviews.models import ProfessorReviewLikes
+from Users.models import Student,Professor
+from Reviews.models import ProfessorReviewLikes,ProfessorReviews
 from django.http.response import HttpResponse
 
 
@@ -54,4 +54,18 @@ def like_prof_review(request,review,factor):
             student_like.save()
         review.update_number_of_likes(review.get_number_of_likes()+int(factor))
         review.save()
-    return HttpResponse(review.get_number_of_likes())
+    return HttpResponse(str(review.get_number_of_likes()))
+	
+def likes(request):
+        student_id = request.POST['student_id']
+        prof_id = request.POST['prof_id']
+        date_time = request.POST['time_stamp']
+        student = Student.objects.filter(_username=student_id)
+        prof = Professor.objects.filter(_username=prof_id)
+        review_list = ProfessorReviews.objects.filter(_student=student[0],_professor=prof[0])
+        review = review_list[0]
+        for rev in review_list:
+            if rev.get_timestamp() == date_time:
+                review = rev
+        factor = request.POST['factor']
+        return like_prof_review(request,review,factor)
